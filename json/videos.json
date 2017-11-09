@@ -1,0 +1,13 @@
+{
+    "videos": [
+        {
+            "id": "9XVasMSJSoU",
+            "title": "Placeholder title 1",
+            "category": "web-design"
+        }, {
+            "id": "Di7RvMlk9io",
+            "title": "Placeholder title 2",
+            "category": "web-development"
+        } 
+    ]  
+}
