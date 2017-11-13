@@ -11,19 +11,19 @@ $(function () {
         categoryList = $('.category-list'),
         searchbox = $('#searchbox'),
         player = $('#player');
-         
+
     /**
      * Initialise the app.
      */
     function init() {
         //get videos from JSON file
-        $.getJSON('json/videos.json', function(data){
+        $.getJSON('json/videos.json', function (data) {
             videos = data.videos;
             displayVideos(videos);
         });
 
         //get categories from JSON file
-        $.getJSON('json/categories.json', function(data){
+        $.getJSON('json/categories.json', function (data) {
             categories = data.categories;
             displayCategories(categories);
         });
@@ -31,27 +31,39 @@ $(function () {
         searchbox.on('keyup', function (evt) {
             evt.preventDefault();
             if (evt.which === 13) {
-                displayVideoByID($(this));
-            }
-        });       
-    }
-    
-    /**
-     * Display a video by its ID.
-     * @param  {HTMLInputElement} searchbox
-     */
-    function displayVideoByID(searchbox) {
-        var inputValue = searchbox.val();
-        //find out if ID exists in DB
-        $.each(videos, function(i, video){
-            var id = video.id;
-            if(id === inputValue){
-                displayVideos([video]);
-                return;
+                var video = getVideoByID($(this).val());
+                if (video) {
+                     displayVideos([video]);         
+                }else{
+                    displayVideosByTitle($(this).val());
+                }
             }
         });
     }
-    
+
+    /**
+     * Get a video by its ID.
+     * @param  {String} inputValue
+     */
+    function getVideoByID(inputValue) {
+        //NOTE: The following (jQuery each method) doesn't work. See https://stackoverflow.com/questions/3946381/how-to-break-out-of-each-and-return-a-value-for-a-function
+        // $.each(videos, function (i, video) {
+        //     var id = video.id;
+        //     if (id === inputValue) {  
+        //         return video;
+        //     }
+        // });
+
+        //find out if ID exists in DB
+        for(var i = 0; i < videos.length; i++){
+            var id = videos[i].id;
+            if (id === inputValue) {  
+                return videos[i];
+            }
+        }  
+        return null;
+    }
+
     /**
      * Get the HTML template for each video list item.
      * @param  {Video} video
@@ -66,10 +78,10 @@ $(function () {
                 </div>`;
     }
 
-     /**
-     * Get the HTML template for each category list item.
-     * @param  {Category} category
-     */
+    /**
+    * Get the HTML template for each category list item.
+    * @param  {Category} category
+    */
     function getHTMLCategoryItem(category) {
         return `<li data-category="${category.slug}" class="category-list--item">                   
                     ${category.title}
@@ -91,35 +103,54 @@ $(function () {
         var videos = $('.video-list--item');
         //loop through and add click event listeners
         $.each(videos, function (i, video) {
-            $(this).on('click', function(){
+            $(this).on('click', function () {
                 playVideo($(this));
             });
         });
     }
 
     /**
-     * Get videos by category.
-     * @param  {Category} category
+     * Display videos by category.
+     * @param  {String} category
      */
-    function displayVideosByCategory(category){
+    function displayVideosByCategory(category) {
         //create an empty "filteredVideos" array
         var filteredVideos = [];
         //loop through the videos ("videos" variable is global so you can use it)
         $.each(videos, function (i, video) {
             //if video category equals category, add the video to array
-            if(video.category === category){
+            if (video.category === category) {
                 filteredVideos.push(video);
             }
-        });  
+        });
 
         //display the videos
         displayVideos(filteredVideos);
     }
 
-      /**
-     * Display a list of categories.
-     * @param  {Array<Category>} categories
-     */
+    /**
+    * Display videos by title.
+    * @param  {String} title
+    */
+    function displayVideosByTitle(title) {
+        //create an empty "filteredVideos" array
+        var filteredVideos = [];
+        //loop through the videos ("videos" variable is global so you can use it)
+        $.each(videos, function (i, video) {
+            //if video title includes inputted title, add the video to array
+            if (video.title.includes(title)) {
+                filteredVideos.push(video);
+            }
+        });
+
+        //display the videos
+        displayVideos(filteredVideos);
+    }
+
+    /**
+   * Display a list of categories.
+   * @param  {Array<Category>} categories
+   */
     function displayCategories(categories) {
         var s = '';
         $.each(categories, function (i, category) {
@@ -132,7 +163,7 @@ $(function () {
         var categories = $('.category-list--item');
         //loop through and add click event listeners
         $.each(categories, function (i, category) {
-            $(this).on('click', function(){
+            $(this).on('click', function () {
                 var category = $(this).data('category');
                 displayVideosByCategory(category);
             });
@@ -145,7 +176,7 @@ $(function () {
      */
     function playVideo(listItem) {
         var videoId = listItem.data('id');
-        player.attr('src', 'http://www.youtube.com/embed/'+ videoId + '?autoplay=1');
+        player.attr('src', 'http://www.youtube.com/embed/' + videoId + '?autoplay=1');
     }
 
     init();
