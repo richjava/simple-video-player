@@ -16,39 +16,24 @@
 </head>
 
 <body>
-
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
     <header>
         <nav>
-            <ul>
-                <li>
-                    <a data-screen="home" class="screen-link active" href="#">Home</a>
-                </li>
-                <li>
-                    <a data-screen="about" class="screen-link" href="#">About</a>
-                </li>
-            </ul>
             <form onsubmit="return false">
-                <input id="searchbox" type="text" name="searchbox" placeholder="Enter a Youtube ID">
+                <input id="searchbox" type="text" name="searchbox" placeholder="Enter a Youtube ID or title">
             </form>
         </nav>
     </header>
     <div class="container">
-        <section id="home" class="screen">
             <h1>Simple Video Player</h1>
             <ul class="category-list"></ul>
             <div class="video-list"></div>
             <iframe id="player" title="YouTube video player" width="480" height="390" src="" frameborder="0" allowfullscreen></iframe>
-        </section>
-        <section id="about" class="screen">
-            <h1>About</h1>
-        </section>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="js/v1.3/main.js"></script>
+    <script src="js/v1.2/main.js"></script>
 </body>
-
 </html>
