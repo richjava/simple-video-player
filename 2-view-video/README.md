@@ -3,7 +3,13 @@ A really simple Youtube video player built in jQuery without the Youtube API.
 
 ## Use cases
 
-### View list
+### 1. View list
 
 * Create a Javascript object that contains an array of objects that will represent videos (video name, Youtube video ID, etc)
 * Create functionality that will use this data to display a “list” of items. You won’t need an image (thumbnail) URL because you can get one by using the Youtube ID 
+
+### 2. View video
+
+Add functionality that will display and play a video if the image is clicked.
+* Get the embed code for a Youtube video (it will be an iframe)
+* Use Javascript to change the src attribute of the iframe
