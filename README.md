@@ -39,10 +39,30 @@ Right now the user can filter by video name and by category but not both at the 
 ### 7. Learn about developer
 
 At the moment, your application has just one screen. We will build an About page which will introduce the developer  ( you). This is called “ routing”. 
-We could just hard code the HTML for this and show/hide it when necessary, but doing so would mean that the browser may need to do some unnecessary work when the page loads ( if the user never goes to that screen, it was loaded for no reason - even though it was hidden). For this reason, we should try to load the content at the time it is going to be used. This is called “ lazy loading”.
+
+## Refactoring
+The project need to be refactored to use the popular templating engine [Handlebars](https://handlebarsjs.com/) instead of ES6 template literals. This so that the HTML doesn't need to be written in strings and can be more modular/reusable. The use of Handlebars is minimal so as not to over-complicate the code, and can be taken further to make the most of the features.
 
 #### Procedures
-* Create a links with the text “Home” and “About” in your main nav
-* On the click of each of these links, your two screens should show and hide respectively
-* Create a set of JSON data that can be used on your About screen
-* Load this into your about screen only if the About screen has been clicked (and only on the first click)
+* Initiate the project with npm ("npm init")
+* Install Handlebars ("npm i handlebars --save")
+* Add templates into HTML, for example:
+````
+<script id="category-item" type="text/x-handlebars-template">
+    <li data-category="{{slug}}" class="categorylist-item">
+        {{title}}
+    </li>
+</script>
+````
+* Refactor the JS to use the Handlebars templating engine, for example:
+````
+    /**
+     * Get the HTML template for each category list item (use-case 4)
+     * @param  {Category} category
+     */
+    function getHTMLCategoryItem(category) {
+        var template = $('#category-item').html();
+        var templateScript = Handlebars.compile(template);
+        return templateScript(category);
+    }
+````
