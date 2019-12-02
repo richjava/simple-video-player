@@ -1,5 +1,5 @@
 # simple-video-player
-A really simple Youtube video player built in jQuery without the Youtube API.
+A really simple Youtube video player built in jQuery without the Youtube API. No styling, just code. The focus is on learning how to build a basaic Javascript/jQuery single page application from a set of use cases.
 
 ## Use cases
 
