@@ -1,0 +1,14 @@
+{
+  "name": "simple-video-player-es6",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Richard Lovell <richjavalabs@gmail.com> (http://richjava.github.io)",
+  "license": "ISC",
+  "devDependencies": {
+    "handlebars": "^4.5.3"
+  }
+}

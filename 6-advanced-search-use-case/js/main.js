@@ -5,13 +5,11 @@ $(function () {
     var videos = null;
 
     //find DOM elements
-    var videoList = $('.videolist'),
-        categoryList = $('.categorylist'),
-        searchbox = $('#searchbox'),
-        player = $('#player'),
-        screenLinks = $('.screen-link'),
-        screens = $('.screen');
-    
+    var videoListEl = $('.videolist'),
+        categoryListEl = $('.categorylist'),
+        searchboxEl = $('#searchbox'),
+        playerEl = $('#player');
+
 
     /**
      * Initialise the app.
@@ -30,26 +28,20 @@ $(function () {
         });
 
         //add keyup event listener 
-        searchbox.on('keyup', function (evt) {
+        searchboxEl.on('keyup', function (evt) {
             evt.preventDefault();
             if (evt.which === 13) {
                 //if input is ID, a video will be returned, otherwise it's a search term
                 var video = getVideoByID($(this).val());
                 if (video) {
                     //use-case 6
-                     displayVideos([video]);         
-                }else{
+                    displayVideos([video]);
+                } else {
                     //use-case 3
                     displayVideosByTitle($(this).val());
                 }
             }
         });
-
-        //add event listeners to screen links (use-case 7)
-        $.each(screenLinks, function(i, link){
-            $(this).on('click', changeScreen);
-        });
-        screens.eq(1).hide();
     }
 
     /**
@@ -78,13 +70,13 @@ $(function () {
             s = s + getHTMLVideoItem(video);
         });
         //set inner HTML of video list container with items
-        videoList.html(s);
-        
+        videoListEl.html(s);
+
         //Use-case 2
         //target the videos
-        var videos = $('.videolist-item');
+        var videoEls = $(".videolist-item");
         //loop through and add click event listeners
-        $.each(videos, function (i, video) {
+        $.each(videoEls, function (i, video) {
             $(this).on('click', function () {
                 playVideo($(this));
             });
@@ -116,44 +108,44 @@ $(function () {
      */
     function playVideo(listItem) {
         var videoId = listItem.data('id');
-        player.attr('src', 'https://www.youtube.com/embed/' + videoId + '?rel=0&modestbranding=1&autohide=1&mute=1&showinfo=0&controls=0&autoplay=1');
+        playerEl.attr('src', 'https://www.youtube.com/embed/' + videoId + '?rel=0&modestbranding=1&autohide=1&mute=1&showinfo=0&controls=0&autoplay=1');
     }
 
-     /**
-    * Get the HTML template for each category list item (use-case 4)
-    * @param  {Category} category
-    */
-   function getHTMLCategoryItem(category) {
-    return `<li data-category="${category.slug}" class="categorylist-item">                   
+    /**
+   * Get the HTML template for each category list item (use-case 4)
+   * @param  {Category} category
+   */
+    function getHTMLCategoryItem(category) {
+        return `<li data-category="${category.slug}" class="categorylist-item">                   
                 ${category.title}
             </li>`;
-        }
+    }
 
-   /**
-   * Display a list of categories (use-case 4)
-   * @param  {Array<Category>} categories
-   */
-  function displayCategories(categories) {
-    var s = '';
-    $.each(categories, function (i, category) {
-        s = s + getHTMLCategoryItem(category);
-    });
-    //set inner HTML of video list container with items
-    categoryList.html(s);
-
-    //Use-case 5
-    //target the videos
-    var categories = $('.categorylist-item');
-    //loop through and add click event listeners
-    $.each(categories, function (i, category) {
-        $(this).on('click', function () {
-            var category = $(this).data('category');
-            displayVideosByCategory(category);
+    /**
+    * Display a list of categories (use-case 4)
+    * @param  {Array<Category>} categories
+    */
+    function displayCategories(categories) {
+        var s = '';
+        $.each(categories, function (i, category) {
+            s = s + getHTMLCategoryItem(category);
         });
-    });
-}
+        //set inner HTML of video list container with items
+        categoryListEl.html(s);
 
-/**
+        //Use-case 5
+        //target the videos
+        var categoryEls = $('.categorylist-item');
+        //loop through and add click event listeners
+        $.each(categoryEls, function (i, category) {
+            $(this).on('click', function () {
+                var category = $(this).data('category');
+                displayVideosByCategory(category);
+            });
+        });
+    }
+
+    /**
      * Display videos filtered by category (use-case 5)
      * @param  {String} category
      */
@@ -173,27 +165,26 @@ $(function () {
     }
 
     /**
-     * Change the screen (use-case 7)
+     * Get a video by its ID.
+     * @param  {String} inputValue
      */
-    function changeScreen(){
-        //remove "active" class from all links
-        $.each(screenLinks, function(i, link){
-            $(this).removeClass('active');
-        });
+    function getVideoByID(inputValue) {
+        //NOTE: The following (jQuery each method) doesn't work. See https://stackoverflow.com/questions/3946381/how-to-break-out-of-each-and-return-a-value-for-a-function
+        // $.each(videos, function (i, video) {
+        //     var id = video.id;
+        //     if (id === inputValue) {  
+        //         return video;
+        //     }
+        // });
 
-        //"$(this)" is the link that was clicked
-        $(this).addClass('active');
-
-        //-------change screen-------//
-
-        var screenName = $(this).data('screen');
-        
-        //hide all screens
-        $.each(screens, function(i, screen){
-            $(this).hide();
-        });
-        //find the screen to be shown
-        $('#' + screenName).show();      
+        //find out if ID exists in DB
+        for (var i = 0; i < videos.length; i++) {
+            var id = videos[i].id;
+            if (id === inputValue) {
+                return videos[i];
+            }
+        }
+        return null;
     }
 
     init();

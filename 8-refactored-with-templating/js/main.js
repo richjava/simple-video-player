@@ -1,34 +1,35 @@
 //once all HTML has loaded
 $(function () {
-
     //video list
     var videos = null;
+    var categories = null;
 
     //find DOM elements
-    var videoList = $('.videolist'),
-        categoryList = $('.categorylist'),
-        searchbox = $('#searchbox'),
-        player = $('#player');
-
+    var videoListEl = $(".videolist"),
+        categoryListEl = $(".categorylist"),
+        searchboxEl = $("#searchbox"),
+        playerEl = $("#player"),
+        screenLinksEls = $(".screen-link"),
+        screensEls = $(".screen");
 
     /**
      * Initialise the app.
      */
     function init() {
         //get videos from JSON file (use-case 1)
-        $.getJSON('json/videos.json', function (data) {
+        $.getJSON("json/videos.json", function (data) {
             videos = data.videos;
             displayVideos(videos);
         });
 
         //get categories from JSON file (use-case 4)
-        $.getJSON('json/categories.json', function (data) {
+        $.getJSON("json/categories.json", function (data) {
             categories = data.categories;
             displayCategories(categories);
         });
 
-        //add keyup event listener 
-        searchbox.on('keyup', function (evt) {
+        //add keyup event listener
+        searchboxEl.on("keyup", function (evt) {
             evt.preventDefault();
             if (evt.which === 13) {
                 //if input is ID, a video will be returned, otherwise it's a search term
@@ -42,6 +43,12 @@ $(function () {
                 }
             }
         });
+
+        //add event listeners to screen links (use-case 7)
+        $.each(screenLinksEls, function (i, link) {
+            $(this).on("click", changeScreen);
+        });
+        screensEls.eq(1).hide();
     }
 
     /**
@@ -49,15 +56,9 @@ $(function () {
      * @param  {Video} video
      */
     function getHTMLVideoItem(video) {
-        return `<div data-id="${video.id}" class="videolist-item">
-                    <div>
-                        <img src="http://i4.ytimg.com/vi/${video.id}/default.jpg" alt="${video.title}">
-                    </div>
-                    <div>
-                        <h3>${video.title}</h3>
-                        <p>${video.category}</p>
-                    </div>
-                </div>`;
+        var template = $('#video-item').html();
+        var templateScript = Handlebars.compile(template);
+        return templateScript(video);
     }
 
     /**
@@ -65,28 +66,28 @@ $(function () {
      * @param  {Array<Video>} videos
      */
     function displayVideos(videos) {
-        var s = '';
+        var s = "";
         $.each(videos, function (i, video) {
             s = s + getHTMLVideoItem(video);
         });
         //set inner HTML of video list container with items
-        videoList.html(s);
+        videoListEl.html(s);
 
         //Use-case 2
         //target the videos
-        var videos = $('.videolist-item');
+        var videosEls = $(".videolist-item");
         //loop through and add click event listeners
-        $.each(videos, function (i, video) {
-            $(this).on('click', function () {
+        $.each(videosEls, function (i, video) {
+            $(this).on("click", function () {
                 playVideo($(this));
             });
         });
     }
 
     /**
-    * Display videos by title (use-case 3)
-    * @param  {String} title
-    */
+     * Display videos by title (use-case 3)
+     * @param  {String} title
+     */
     function displayVideosByTitle(title) {
         //create an empty "filteredVideos" array
         var filteredVideos = [];
@@ -107,39 +108,44 @@ $(function () {
      * @param  {HTMLDivElement} listItem
      */
     function playVideo(listItem) {
-        var videoId = listItem.data('id');
-        player.attr('src', 'https://www.youtube.com/embed/' + videoId + '?rel=0&modestbranding=1&autohide=1&mute=1&showinfo=0&controls=0&autoplay=1');
+        var videoId = listItem.data("id");
+        playerEl.attr(
+            "src",
+            "https://www.youtube.com/embed/" +
+            videoId +
+            "?rel=0&modestbranding=1&autohide=1&mute=1&showinfo=0&controls=0&autoplay=1"
+        );
     }
 
     /**
-   * Get the HTML template for each category list item (use-case 4)
-   * @param  {Category} category
-   */
+     * Get the HTML template for each category list item (use-case 4)
+     * @param  {Category} category
+     */
     function getHTMLCategoryItem(category) {
-        return `<li data-category="${category.slug}" class="categorylist-item">                   
-                ${category.title}
-            </li>`;
+        var template = $('#category-item').html();
+        var templateScript = Handlebars.compile(template);
+        return templateScript(category);
     }
 
     /**
-    * Display a list of categories (use-case 4)
-    * @param  {Array<Category>} categories
-    */
+     * Display a list of categories (use-case 4)
+     * @param  {Array<Category>} categories
+     */
     function displayCategories(categories) {
-        var s = '';
+        var s = "";
         $.each(categories, function (i, category) {
             s = s + getHTMLCategoryItem(category);
         });
         //set inner HTML of video list container with items
-        categoryList.html(s);
+        categoryListEl.html(s);
 
         //Use-case 5
         //target the videos
-        var categories = $('.categorylist-item');
+        var categoryEls = $(".categorylist-item");
         //loop through and add click event listeners
-        $.each(categories, function (i, category) {
-            $(this).on('click', function () {
-                var category = $(this).data('category');
+        $.each(categoryEls, function (i, category) {
+            $(this).on("click", function () {
+                var category = $(this).data("category");
                 displayVideosByCategory(category);
             });
         });
@@ -172,7 +178,7 @@ $(function () {
         //NOTE: The following (jQuery each method) doesn't work. See https://stackoverflow.com/questions/3946381/how-to-break-out-of-each-and-return-a-value-for-a-function
         // $.each(videos, function (i, video) {
         //     var id = video.id;
-        //     if (id === inputValue) {  
+        //     if (id === inputValue) {
         //         return video;
         //     }
         // });
@@ -185,6 +191,24 @@ $(function () {
             }
         }
         return null;
+    }
+
+    /**
+     * Change the screen (use-case 7)
+     */
+    function changeScreen(){
+        //remove "active" class from all links
+        screenLinksEls.removeClass('active');
+        //"$(this)" is the link that was clicked
+        $(this).addClass('active');
+
+        //-------change screen-------//
+        
+        //hide all screens
+        screensEls.hide();
+        //find the screen to be shown
+        var screenName = $(this).data('screen');
+        $('#' + screenName).show();      
     }
 
     init();

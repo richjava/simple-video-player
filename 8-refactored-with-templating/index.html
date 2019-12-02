@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Simple Video Player</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li>
+                    <a data-screen="home" class="screen-link active" href="#">Home</a>
+                </li>
+                <li>
+                    <a data-screen="about" class="screen-link" href="#">About</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <section id="home" class="screen">
+            <form onsubmit="return false">
+                <input id="searchbox" type="text" name="searchbox" placeholder="Enter a Youtube ID or search term...">
+            </form>
+            <h1>Simple Video Player</h1>
+            <ul class="categorylist"></ul>
+            <script id="category-item" type="text/x-handlebars-template">
+                <li data-category="{{slug}}" class="categorylist-item">
+                  {{title}}
+                </li>
+           </script>
+            <div class="videolist"></div>
+            <script id="video-item" type="text/x-handlebars-template">
+                <div data-id="{{id}}" class="videolist-item">
+                    <div>
+                      <img src="http://i4.ytimg.com/vi/{{id}}/default.jpg" alt="{{title}}">
+                    </div>
+                    <div>
+                      <h3>{{title}}</h3>
+                      <p>{{category}}</p>
+                    </div>
+                  </div>
+             </script>
+            <iframe id="player" title="YouTube video player" width="480" height="390" src="" frameborder="0" allowfullscreen></iframe>
+        </section>
+        <section id="about" class="screen">
+            <h1>About</h1>
+        </section>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

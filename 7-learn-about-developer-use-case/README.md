@@ -38,11 +38,10 @@ Right now the user can filter by video name and by category but not both at the 
 
 ### 7. Learn about developer
 
-At the moment, your application has just one screen. We will build an About page which will introduce the developer  ( you). This is called “ routing”. 
-We could just hard code the HTML for this and show/hide it when necessary, but doing so would mean that the browser may need to do some unnecessary work when the page loads ( if the user never goes to that screen, it was loaded for no reason - even though it was hidden). For this reason, we should try to load the content at the time it is going to be used. This is called “ lazy loading”.
+At the moment, your application has just one screen. We will build an About page which will introduce the developer  ( you). This is called “ routing”.
 
 #### Procedures
 * Create a links with the text “Home” and “About” in your main nav
 * On the click of each of these links, your two screens should show and hide respectively
 * Create a set of JSON data that can be used on your About screen
-* Load this into your about screen only if the About screen has been clicked (and only on the first click)
+* Extra challenge: Load this into your about screen only if the About screen has been clicked (and only on the first click). This is called "lazy loading".
