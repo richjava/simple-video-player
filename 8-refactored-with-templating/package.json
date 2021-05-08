@@ -9,6 +9,6 @@
   "author": "Richard Lovell <richjavalabs@gmail.com> (http://richjava.github.io)",
   "license": "ISC",
   "devDependencies": {
-    "handlebars": "^4.5.3"
+    "handlebars": "^4.7.7"
   }
 }
